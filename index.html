@@ -1,0 +1,501 @@
+<!DOCTYPE html>  
+
+  
+
+<html lang="en">  
+
+  
+
+<head>  
+
+  
+
+  <meta charset="UTF-8" />  
+
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+
+  
+
+  <title>La Tavola</title>  
+
+  
+
+  <link rel="stylesheet" href="styles.css"/>  
+
+  
+
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">  
+
+  
+
+</head>  
+
+  
+
+<body>  
+
+  
+
+   
+
+  
+
+  <header class="navbar">  
+
+  
+
+    <h1>La Tavola</h1>  
+
+  
+
+    <div class="theme-selector">  
+
+  
+
+      <label for="themeSelect">🎨 Theme:</label>  
+
+  
+
+      <select id="themeSelect" onchange="changeTheme(this.value)">  
+
+  
+
+        <option value="classic">Classic 🇮🇹</option>  
+
+  
+
+        <option value="modern">Modern 🌃</option>  
+
+  
+
+        <option value="romantic">Romantic 🍷</option>  
+
+  
+
+      </select>  
+
+  
+
+    </div>  
+
+  
+
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>  
+
+  
+
+  </header>  
+
+  
+
+   
+
+  
+
+  <main>  
+
+  
+
+    <section class="login" id="loginBox">  
+
+  
+
+      <h2>Welcome to La Tavola</h2>  
+
+  
+
+      <input type="text" id="name" placeholder="Your Name"/>  
+
+  
+
+      <input type="text" id="phone" placeholder="Phone Number"/>  
+
+  
+
+      <button onclick="loginUser()">Login</button>  
+
+  
+
+    </section>  
+
+  
+
+   
+
+  
+
+    <section id="menuSection" style="display: none;">  
+
+  
+
+      <div class="veg-toggle">  
+
+  
+
+        <button class="veg-toggle-btn" onclick="toggleVegMode(this)">  
+
+  
+
+          🌿 Veg Only  
+
+  
+
+        </button>  
+
+  
+
+      </div>  
+
+  
+
+      <div class="categories" id="categories"></div>  
+
+  
+
+      <div id="items" class="items"></div>  
+
+  
+
+      <div class="cart-status">  
+
+  
+
+        🛒 Items in cart: <span id="cartCount">0</span>  
+
+  
+
+        <button class="mini-btn" onclick="seeCart()">See Cart</button>  
+
+  
+
+      </div>  
+
+  
+
+      <button onclick="generateBillPage()">Generate Bill</button>  
+
+  
+
+    </section>  
+
+  
+
+  </main>  
+
+  
+
+   
+
+  
+
+  <!-- Toast Notification -->  
+
+  
+
+  <div id="toast" class="toast">Added to cart!</div>  
+
+  
+
+   
+
+  
+
+  <!-- Cart Modal -->  
+
+  
+
+  <div id="cartModal" class="modal">  
+
+  
+
+    <div class="modal-content">  
+
+  
+
+      <span class="close-btn" onclick="closeCart()">&times;</span>  
+
+  
+
+      <h2>Your Cart</h2>  
+
+  
+
+      <div id="cartDetails"></div>  
+
+  
+
+    </div>  
+
+  
+
+  </div>  
+
+  
+
+   
+
+  
+
+  <!-- Floating Cart Button -->  
+
+  
+
+  <button id="cartFloatBtn" onclick="toggleCartSidebar()">🛒 Cart (<span id="cartCountFloat">0</span>)</button>  
+
+  
+
+   
+
+  
+
+  <!-- Live Cart Sidebar -->  
+
+  
+
+  <div id="cartSidebar" class="cart-sidebar">  
+
+  
+
+    <div class="cart-sidebar-header">  
+
+  
+
+      <h3>Your Cart</h3>  
+
+  
+
+      <button onclick="toggleCartSidebar()">✖</button>  
+
+  
+
+    </div>  
+
+  
+
+    <div id="cartSidebarItems"></div>  
+
+  
+
+  </div>  
+
+  
+
+   
+
+  
+
+  <!-- Feedback Modal -->  
+
+  
+
+  <div id="feedbackModal" class="modal">  
+
+  
+
+    <div class="modal-content">  
+
+  
+
+      <span class="close-btn" onclick="closeFeedback()">&times;</span>  
+
+  
+
+      <h2>We value your feedback!</h2>  
+
+  
+
+      <form onsubmit="submitFeedback(); return false;">  
+
+  
+
+        <label for="rating">Rate us:  
+
+  
+
+          <select id="rating" required>  
+
+  
+
+            <option value="">--Choose--</option>  
+
+  
+
+            <option>⭐️⭐️⭐️⭐️⭐️</option>  
+
+  
+
+            <option>⭐️⭐️⭐️⭐️</option>  
+
+  
+
+            <option>⭐️⭐️⭐️</option>  
+
+  
+
+            <option>⭐️⭐️</option>  
+
+  
+
+            <option>⭐️</option>  
+
+  
+
+          </select>  
+
+  
+
+        </label><br/><br/>  
+
+  
+
+        <textarea id="feedbackText" rows="3" placeholder="Write something nice 😊..." style="width:100%;"></textarea><br/><br/>  
+
+  
+
+        <button type="submit">Submit Feedback</button>  
+
+  
+
+      </form>  
+
+  
+
+    </div>  
+
+  
+
+  </div>  
+
+  
+
+   
+
+  
+
+  <!-- Footer -->  
+
+  
+
+  <footer class="footer">  
+
+  
+
+    <p>Follow us:</p>  
+
+  
+
+    <a href="https://instagram.com/yourprofile" target="_blank">  
+
+  
+
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" class="social-icon" alt="Instagram"/>  
+
+  
+
+    </a>  
+
+  
+
+    <a href="https://wa.me/919999999999" target="_blank">  
+
+  
+
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" class="social-icon" alt="WhatsApp"/>  
+
+  
+
+    </a>  
+
+  
+
+  </footer>  
+
+  
+
+   
+
+  
+
+  <script src="script.js"></script>  
+
+  
+
+  <script>  
+
+  
+
+    let vegOnlyActive = false;  
+
+  
+
+    function toggleVegMode(button) {  
+
+  
+
+      vegOnlyActive = !vegOnlyActive;  
+
+  
+
+      button.classList.toggle("active", vegOnlyActive);  
+
+  
+
+      const allCards = document.querySelectorAll('.item-card');  
+
+  
+
+      allCards.forEach(card => {  
+
+  
+
+        const labelText = card.querySelector("h3").innerText;  
+
+  
+
+        const isVeg = labelText.includes("🌱") && !labelText.includes("🍗");  
+
+  
+
+        if (vegOnlyActive && !isVeg) {  
+
+  
+
+          card.style.display = 'none';  
+
+  
+
+        } else {  
+
+  
+
+          card.style.display = '';  
+
+  
+
+        }  
+
+  
+
+      });  
+
+  
+
+    }  
+
+  
+
+  </script>  
+
+  
+
+</body>  
+
+  
+
+</html>  
+
+  
+
+ 
