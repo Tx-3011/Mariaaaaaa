@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>La Tavola</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="navbar">
+    <h1>La Tavola</h1>
+    <div class="theme-selector">
+      <label for="themeSelect">🎨 Theme:</label>
+      <select id="themeSelect" onchange="changeTheme(this.value)">
+        <option value="classic">Classic 🇮🇹</option>
+        <option value="modern">Modern 🌃</option>
+        <option value="romantic">Romantic 🍷</option>
+      </select>
+    </div>
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+  </header>
+
+  <main>
+    <section class="login" id="loginBox">
+      <h2>Welcome to La Tavola</h2>
+      <input type="text" id="name" placeholder="Your Name"/>
+      <input type="text" id="phone" placeholder="Phone Number"/>
+      <button onclick="loginUser()">Login</button>
+      <p id="loginError" class="error-message" style="display: none; color: red; margin-top: 10px;"></p>
+    </section>
+
+    <section id="menuSection" style="display: none;">
+      <div class="user-info">
+          Welcome, <span id="userNameDisplay">Guest</span>!
+          <button onclick="logoutUser()" id="logoutButton">Logout</button>
+      </div>
+      <div class="veg-toggle">
+        <button id="vegToggleButton" class="veg-toggle-btn" onclick="toggleVegMode(this)">
+          🌿 Veg Only
+        </button>
+      </div>
+      <div class="categories" id="categories"></div>
+      <div id="items" class="items">Loading menu...</div>
+       <div class="cart-status">
+         🛒 Items in cart: <span id="cartCountStatus">0</span> | Total: ₹<span id="cartTotalStatus">0.00</span>
+         <button class="mini-btn" onclick="seeCart()">See Cart</button>
+         <button class="mini-btn checkout-btn" onclick="checkoutOrder()">Checkout</button>
+       </div>
+      </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeCart()">&times;</span>
+      <h2>Your Cart</h2>
+      <div id="cartDetails">Your cart is empty.</div>
+       <div class="cart-summary">
+         <strong>Total: ₹<span id="cartModalTotal">0.00</span></strong>
+       </div>
+       <button class="checkout-btn" onclick="checkoutOrder()">Checkout</button>
+    </div>
+  </div>
+
+  <button id="cartFloatBtn" onclick="toggleCartSidebar()">🛒 Cart (<span id="cartCountFloat">0</span>)</button>
+
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-sidebar-header">
+      <h3>Your Cart</h3>
+      <button onclick="toggleCartSidebar()">✖</button>
+    </div>
+    <div id="cartSidebarItems">Your cart is empty.</div>
+     <div class="cart-sidebar-footer">
+         <strong>Total: ₹<span id="cartSidebarTotal">0.00</span></strong>
+         <button class="checkout-btn" onclick="checkoutOrder()">Checkout</button>
+     </div>
+  </div>
+
+  <div id="feedbackModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeFeedback()">&times;</span>
+      <h2>We value your feedback!</h2>
+      <form onsubmit="submitFeedback(); return false;">
+        <label for="rating">Rate us:
+          <select id="rating" required>
+            <option value="">--Choose--</option>
+             <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+             <option value="4">⭐️⭐️⭐️⭐️</option>
+             <option value="3">⭐️⭐️⭐️</option>
+             <option value="2">⭐️⭐️</option>
+             <option value="1">⭐️</option>
+          </select>
+        </label><br/><br/>
+        <textarea id="feedbackText" rows="3" placeholder="Write something nice 😊..." style="width:100%;"></textarea><br/><br/>
+        <button type="submit">Submit Feedback</button>
+         <p id="feedbackError" class="error-message" style="display: none; color: red; margin-top: 10px;"></p>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Follow us:</p>
+    <a href="https://instagram.com/yourprofile" target="_blank">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" class="social-icon" alt="Instagram"/>
+    </a>
+    <a href="https://wa.me/919999999999" target="_blank">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" class="social-icon" alt="WhatsApp"/>
+    </a>
+  </footer>
+
+  <script>
+    // Define API URL (Adjust if your backend runs elsewhere)
+    const API_URL = '/api'; // Use relative path for same-origin deployment
+
+    // Initialize global state (will be populated on login/load)
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let menuItemsData = []; // To store all loaded menu items
+    let categoriesData = []; // To store loaded categories
+
+    // Basic function to escape HTML to prevent XSS
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+  </script>
+
+  <script src="js/main.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/bill.js"></script>
+
+  </body>
+</html>
